@@ -23,8 +23,9 @@ func main() {
 
 	router := r.Group("")
 	{
-		router.GET("/products/:category_id", controller.LoadDataProduct)
+		router.GET("/Stock/:category_id", controller.GetStock)
 		router.GET("/Supplier", controller.GetdataAllSupplier)
+		router.POST("/AddStock", controller.AddStockHandler)
 	}
 
 	r.GET("/", func(c *gin.Context) {
