@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Layout, Input, Button, Form, Select, DatePicker, Table, Row, Col } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import {SearchOutlined } from "@ant-design/icons"
+import { useNavigate } from "react-router-dom";
+import { debounce } from 'lodash';
 
 const { Header, Content } = Layout;
-const { Search } = Input;
 const { Option } = Select;
 
 export default function StockCategory({ categoryTitle, initialData }) {
@@ -12,19 +13,33 @@ export default function StockCategory({ categoryTitle, initialData }) {
   const [isAdding, setIsAdding] = useState(false);
   const [form] = Form.useForm();
   const [data, setData] = useState(initialData);
+  const [query, setQuery] = useState('');
+  const [filteredData, setFilteredData] = useState(initialData);
 
   useEffect(() => {
-    console.log("ข้อมูล initialData ฝั่ง StockCategory:", data); // ตรวจสอบข้อมูลที่ถูกส่งไปแสดงในตาราง
-  }, [data]);
-
-
-  useEffect(() => {
-    setData(initialData); // ตั้งค่าข้อมูลที่รับมาจาก props
+    setFilteredData(initialData); // ตั้งค่าข้อมูลที่รับมาจาก props
   }, [initialData]);
 
-  const handleBackClick = () =>{
-      navigate("/ManageStock");
-  }
+  const handleQueryChange = useCallback(
+    debounce((value) => {
+      const lowercasedQuery = value.toLowerCase();
+      const filtered = data.filter(item => 
+        item.name.toLowerCase().includes(lowercasedQuery)
+      );
+      setFilteredData(filtered);
+    }, 300), // ใส่ดีเลย์ 300 มิลลิวินาที (ปรับค่าได้ตามต้องการ)
+    [data]
+  );
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+    handleQueryChange(value); // เรียกใช้ debounce function
+  };
+
+  const handleBackClick = () => {
+    navigate("/ManageStock");
+  };
 
   const columns = [
     { title: "รหัสรายการ", dataIndex: "codelist", key: "codelist" },
@@ -42,6 +57,7 @@ export default function StockCategory({ categoryTitle, initialData }) {
   };
 
   const handleFinish = (values) => {
+    console.log("values add : ",values);
     const newItem = {
       key: data.length + 1,
       ...values,
@@ -65,11 +81,13 @@ export default function StockCategory({ categoryTitle, initialData }) {
           alignItems: "center",
         }}
       >
-        <h1 style={{ margin: 0 ,fontSize:'24px'}}>สินค้าประเภท {categoryTitle}</h1>
-        <Search
+        <h1 style={{ margin: 0, fontSize:'24px' }}>สินค้าประเภท {categoryTitle}</h1>
+        <Input
           placeholder="ค้นหาชื่อสินค้า"
           style={{ width: 300 }}
-          onSearch={(value) => console.log(value)}
+          value={query}
+          onChange={handleInputChange} // อัปเดต query พร้อมดีเลย์
+          suffix={<SearchOutlined />}
         />
       </Header>
       <Content style={{ padding: "20px" }}>
@@ -88,12 +106,12 @@ export default function StockCategory({ categoryTitle, initialData }) {
               </Col>
             </Row>
 
-            <Table dataSource={data} columns={columns} />
+            <Table dataSource={filteredData} columns={columns} />
           </>
         ) : (
           <Row gutter={16}>
             <Col span={18}>
-              <Table dataSource={data} columns={columns} />
+              <Table dataSource={filteredData} columns={columns} />
             </Col>
             <Col span={6} style={{background: '#ffffff',borderRadius: '8px', padding: '20px' ,boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'}}>
               <Form
