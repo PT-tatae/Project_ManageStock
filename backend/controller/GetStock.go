@@ -8,6 +8,18 @@ import (
 	"github.com/Jarntae/Sa_StockOrder/entity"
 )
 
+// Result struct สำหรับจัดรูปแบบผลลัพธ์
+type Result struct {
+	StockID        uint      `json:"stock_id"`
+	ProductCodeID  string    `json:"product_code_id"`
+	ProductName    string    `json:"product_name"`
+	Quantity       uint      `json:"quantity"`
+	Price          float64   `json:"price"`
+	DateIn         time.Time `json:"date_in"`
+	ExpirationDate time.Time `json:"expiration_date"`
+	SupplierName   string    `json:"supplier_name"`
+}
+
 func GetStock(c *gin.Context) {
 	categoryID := c.Param("category_id")
 
@@ -54,9 +66,8 @@ func GetStock(c *gin.Context) {
 	}
 
 	// สร้างข้อมูลผลลัพธ์
-	result := []gin.H{}
+	var result []Result
 	for _, product := range products {
-		stockList := []gin.H{}
 		for _, stock := range stocks {
 			if stock.ProductID != nil && *stock.ProductID == product.ID {
 				supplierName := ""
@@ -65,27 +76,19 @@ func GetStock(c *gin.Context) {
 						supplierName = supplier.SupplierName
 					}
 				}
-				stockList = append(stockList, gin.H{
-					"quantity":        stock.Quantity,
-					"price":           stock.Price,
-					"date_in":         stock.DateIn.Format(time.RFC3339),
-					"expiration_date": stock.ExpirationDate.Format(time.RFC3339),
-					"Supplier": gin.H{
-						"supplier_name": supplierName,
-					},
+				result = append(result, Result{
+					StockID:        stock.ID,
+					ProductCodeID:  product.Product_Code_ID,
+					ProductName:    product.ProductName,
+					Quantity:       stock.Quantity,
+					Price:          stock.Price,
+					DateIn:         stock.DateIn,
+					ExpirationDate: stock.ExpirationDate,
+					SupplierName:   supplierName,
 				})
 			}
 		}
-		result = append(result, gin.H{
-			"product": gin.H{
-				"ID":              product.ID,
-				"product_code_id": product.Product_Code_ID,
-				"product_name":    product.ProductName,
-			},
-			"stocks": stockList,
-		})
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": result})
 }
-
