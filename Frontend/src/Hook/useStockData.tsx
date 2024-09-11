@@ -9,6 +9,7 @@ export default function useStockData(categoryID: number) {
     // ดึงข้อมูล Stock ตาม categoryID ที่ส่งมา
     GetStock(categoryID).then((res) => {
       if (res) {
+        console.log("ข้อมูลที่รับมา", res.data);
         const transformedData = transformStockData(res.data);
         setStockData(transformedData);
       }
@@ -20,17 +21,18 @@ export default function useStockData(categoryID: number) {
 
 function transformStockData(data: any) {
   return data.map((item: any, index: number) => {
-    const stocks = item.stocks[0] || {}; // ดึงสต็อกแรก หากไม่มีให้ใช้ค่าว่าง
     return {
       key: String(index + 1),
       codelist: String(index + 1),
-      code: item.product.product_code_id || '', // รหัสสินค้า
-      name: item.product.product_name || '', // ชื่อสินค้า
-      quantity: stocks.quantity ? String(stocks.quantity) : 'N/A', // จำนวนในสต็อก
-      price: stocks.price ? String(stocks.price) : 'N/A', // ราคา
-      supplier: stocks.Supplier?.supplier_name || 'N/A', // ชื่อผู้จัดส่ง
-      importDate: stocks.date_in ? new Date(stocks.date_in).toLocaleString() : 'N/A', // วันที่นำเข้า
-      expiryDate: stocks.expiration_date ? new Date(stocks.expiration_date).toLocaleString() : 'N/A', // วันหมดอายุ
+      code: item.product_code_id || "", // รหัสสินค้า
+      name: item.product_name || "", // ชื่อสินค้า
+      quantity: item.quantity ? String(item.quantity) : "N/A", // จำนวนในสต็อก
+      price: item.price ? String(item.price) : "N/A", // ราคา
+      supplier: item.supplier_name || "N/A", // ชื่อผู้จัดส่ง
+      importDate: item.date_in ? new Date(item.date_in).toLocaleString() : "N/A", // วันที่นำเข้า
+      expiryDate: item.expiration_date
+        ? new Date(item.expiration_date).toLocaleString()
+        : "N/A", // วันหมดอายุ
     };
   });
 }
