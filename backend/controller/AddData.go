@@ -47,6 +47,7 @@ func AddStockHandler(c *gin.Context) {
 
 		// หาเลขสูงสุดของ Product_Code_ID ที่มีอยู่ใน category นี้
 		var lastProduct entity.Product
+
 		// ดึง product_code_id ที่เป็นเลขสูงสุดจากหมวดหมู่นี้
 		if err := config.DB().Where("product_code_id LIKE ?", category.Category_Code_id+"%").
 			Order("product_code_id DESC").First(&lastProduct).Error; err != nil {
@@ -65,6 +66,7 @@ func AddStockHandler(c *gin.Context) {
 			Product_Code_ID: data.Product_Code_ID,
 			ProductName:     data.ProductName,
 			CategoryID:      &data.CategoryID,
+			EmployeeID:      &data.EmployeeID,
 		}
 		if err := config.DB().Create(&newProduct).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create new product"})
