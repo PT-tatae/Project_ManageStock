@@ -1,9 +1,0 @@
-export interface IStock {
-  quantity: number;             // จำนวนสินค้า
-  price: number;                // ราคา
-  date_in: Date;                // วันที่นำเข้าสินค้า
-  expiration_date: Date;        // วันที่หมดอายุ
-  Supplier: {
-    supplier_name: string;      // ชื่อซัพพลายเออร์
-  };
-}
