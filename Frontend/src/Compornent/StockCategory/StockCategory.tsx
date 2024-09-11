@@ -3,6 +3,8 @@ import { Layout, Input, Button, Form, Select, DatePicker, Table, Row, Col } from
 import {SearchOutlined } from "@ant-design/icons"
 import { useNavigate } from "react-router-dom";
 import { debounce } from 'lodash';
+import {IStock } from "../../interfaces/IStock.tsx";
+import { AddStock } from "../../services/https/index.tsx";
 
 const { Header, Content } = Layout;
 const { Option } = Select;
@@ -56,19 +58,33 @@ export default function StockCategory({ categoryTitle, initialData }) {
     setIsAdding(true);
   };
 
-  const handleFinish = (values) => {
-    console.log("values add : ",values);
-    const newItem = {
-      key: data.length + 1,
-      ...values,
-      importDate: values.importDate.format("YYYY-MM-DD HH:mm"),
-      expiryDate: values.expiryDate.format("YYYY-MM-DD HH:mm"),
+  const handleFinish = async (values) => {
+    const newItem: IStock = {
+      category_id: 6, // เปลี่ยนเป็น category_id
+      product_code_id: values.code, // เปลี่ยนเป็น product_code_id
+      product_name: values.name, // เปลี่ยนเป็น product_name
+      quantity: Number(values.quantity),
+      price: Number(values.price),
+      date_in: values.importDate.format("YYYY-MM-DDTHH:mm:ssZ"), // เปลี่ยนเป็น date_in
+      expiration_date: values.expiryDate.format("YYYY-MM-DDTHH:mm:ssZ"), // เปลี่ยนเป็น expiration_date
+      supplier_id: 2, // เปลี่ยนเป็น supplier_id
+      employee_id: 1  // เปลี่ยนเป็น employee_id
     };
-
-    setData([...data, newItem]);
-    setIsAdding(false);
-    form.resetFields();
+    console.log("add_naw", newItem);
+    try {
+      const result = await AddStock(newItem);
+      if (result) {
+        window.location.reload();
+        // setData([...data, newItem]);
+        // setFilteredData([...filteredData, newItem]);
+        // setIsAdding(false);
+        // form.resetFields();
+      }
+    } catch (error) {
+      console.error("Error adding stock:", error);
+    }
   };
+  
 
   return (
     <Layout>
