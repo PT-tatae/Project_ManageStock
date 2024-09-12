@@ -1,5 +1,4 @@
-// StockMeat.js
-import React from "react";
+
 import StockCategory from "../../Compornent/StockCategory/StockCategory";
 
 const meatData = [
