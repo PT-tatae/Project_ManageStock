@@ -27,6 +27,7 @@ func main() {
 		router.GET("/SupplierName", controller.GetNameSupplier)
 		router.GET("/Supplier", controller.GetdataAllSupplier)
 		router.POST("/AddStock", controller.AddStockHandler)
+		r.PUT("/UpdateStock", controller.UpdateStock)
 	}
 
 	r.GET("/", func(c *gin.Context) {
