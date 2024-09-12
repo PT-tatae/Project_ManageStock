@@ -19,7 +19,7 @@ import { AddStock } from "../../services/https/index.tsx";
 const { Header, Content } = Layout;
 const { Option } = Select;
 
-export default function StockCategory({ categoryTitle, initialData }) {
+export default function StockCategory({ categoryTitle, initialData,categoryID}) {
   const navigate = useNavigate();
 
   const [isAdding, setIsAdding] = useState(false);
@@ -91,7 +91,7 @@ export default function StockCategory({ categoryTitle, initialData }) {
 
   const handleFinish = async (values) => {
     const newItem: IStock = {
-      category_id: 6, // เปลี่ยนเป็น category_id
+      category_id: categoryID, // เปลี่ยนเป็น category_id
       product_code_id: values.code, // เปลี่ยนเป็น product_code_id
       product_name: values.name, // เปลี่ยนเป็น product_name
       quantity: Number(values.quantity),
