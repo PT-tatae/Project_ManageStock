@@ -17,8 +17,9 @@ import {
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
-import { IStock } from "../../interfaces/IStock.tsx";
-import { AddStock, GetSupplierName } from "../../services/https/index.tsx";
+import { IStock} from "../../interfaces/IStock.tsx";
+import { Update} from "../../interfaces/Update.tsx";
+import { AddStock, GetSupplierName ,UpdateStock} from "../../services/https/index.tsx";
 import moment from "moment";
 
 const { Header, Content } = Layout;
@@ -146,7 +147,7 @@ export default function StockCategory({
       price: Number(values.price),
       date_in: values.importDate.format("YYYY-MM-DDTHH:mm:ssZ"),
       expiration_date: values.expiryDate.format("YYYY-MM-DDTHH:mm:ssZ"),
-      supplier_id: values.supplier,
+      supplier_id: Number(values.supplier), // แปลงเป็น number
       employee_id: 1, //ยังไม่ได้เชื่อมกับเพื่อน
     };
   
@@ -155,12 +156,13 @@ export default function StockCategory({
   
       if (editingRecord) {
         // แก้ไขข้อมูลเดิม
-        const updatedItem = {
+        const updatedItem: Update = {
           ...newItem,
-          stock_id: editingRecord.stock_id, // ใส่ ID หรือข้อมูลที่จำเป็นสำหรับการอัปเดต
+          stock_id: Number(editingRecord.stock_id), // แปลงเป็น number
         };
         //result = await UpdateStock(updatedItem); // เรียกฟังก์ชัน API สำหรับการแก้ไข
-        console.log("updatedItem",updatedItem);
+        //console.log("updatedItem",updatedItem);
+        result = await UpdateStock(updatedItem);
         
       } else {
         // เพิ่มข้อมูลใหม่
