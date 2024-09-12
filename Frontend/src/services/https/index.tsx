@@ -70,9 +70,36 @@ async function AddStock(newStock: IStock) {
   }
 }
 
+async function UpdateStock(UpdateStock: IStock) {
+  console.log("UpdateStock",UpdateStock);
+  
+}
 
+async function GetSupplierName() {
+  try {
+    const response = await fetch(`${apiUrl}/SupplierName`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      // ตรวจสอบสถานะการตอบกลับ
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching suppliers:", error);
+    return null;
+  }
+}
 
 export { GetStock,
   GetDataSupplier,
   AddStock,
+  UpdateStock,
+  GetSupplierName,
  };
