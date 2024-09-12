@@ -24,7 +24,7 @@ type InputUpdateStock struct {
 }
 
 func UpdateStock(c *gin.Context) {
-	var data InputUpdateStock // แก้ตรงนี้ให้ตรงกับชื่อ struct
+	var data InputUpdateStock
 	var stock entity.Stock
 	var product entity.Product
 
@@ -40,10 +40,20 @@ func UpdateStock(c *gin.Context) {
 		return
 	}
 
-	// ตรวจสอบว่า Product_Code_ID มีอยู่แล้วหรือไม่
+	// ตรวจสอบว่า Product_Code_ID มีอยู่หรือไม่
 	if err := config.DB().Where("product_code_id = ?", data.Product_Code_ID).First(&product).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
 		return
+	}
+
+	// ตรวจสอบว่า ProductName ที่รับเข้ามาตรงกับฐานข้อมูลหรือไม่
+	if product.ProductName != data.ProductName {
+		// ถ้า ProductName ไม่ตรงกันให้ทำการอัปเดตชื่อในฐานข้อมูล
+		product.ProductName = data.ProductName
+		if err := config.DB().Save(&product).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update product name"})
+			return
+		}
 	}
 
 	// อัปเดตข้อมูล stock ที่มีอยู่
