@@ -23,7 +23,7 @@ function transformStockData(data: any) {
   return data.map((item: any, index: number) => {
     return {
       key: String(index + 1),
-      codelist: String(index + 1),
+      code_stock: String(index + 1),
       code: item.product_code_id || "", // รหัสสินค้า
       name: item.product_name || "", // ชื่อสินค้า
       quantity: item.quantity ? String(item.quantity) : "N/A", // จำนวนในสต็อก
