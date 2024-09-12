@@ -1,4 +1,6 @@
 import { IStock } from "../../interfaces/IStock.tsx";
+import { Update} from "../../interfaces/Update.tsx";
+
 
 const apiUrl = "http://localhost:8000";
 
@@ -70,8 +72,28 @@ async function AddStock(newStock: IStock) {
   }
 }
 
-async function UpdateStock(UpdateStock: IStock) {
-  console.log("UpdateStock",UpdateStock);
+async function UpdateStock(updateStock: Update) {
+  console.log("เตรียมข้อมูล",UpdateStock);
+  
+  try {
+    const response = await fetch(`${apiUrl}/UpdateStock`, {
+      method: "PUT", // ใช้ PUT สำหรับการอัปเดตข้อมูล
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updateStock), // ส่งข้อมูลที่จะแก้ไขไปยัง backend
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data; // ส่งข้อมูลที่ตอบกลับจาก backend กลับมา
+  } catch (error) {
+    console.error("Error updating stock:", error);
+    return null;
+  }
   
 }
 
