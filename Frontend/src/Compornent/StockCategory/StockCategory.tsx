@@ -1,9 +1,19 @@
 import { useState, useEffect, useCallback } from "react";
-import { Layout, Input, Button, Form, Select, DatePicker, Table, Row, Col } from "antd";
-import {SearchOutlined } from "@ant-design/icons"
+import {
+  Layout,
+  Input,
+  Button,
+  Form,
+  Select,
+  DatePicker,
+  Table,
+  Row,
+  Col,
+} from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { debounce } from 'lodash';
-import {IStock } from "../../interfaces/IStock.tsx";
+import { debounce } from "lodash";
+import { IStock } from "../../interfaces/IStock.tsx";
 import { AddStock } from "../../services/https/index.tsx";
 
 const { Header, Content } = Layout;
@@ -15,7 +25,7 @@ export default function StockCategory({ categoryTitle, initialData }) {
   const [isAdding, setIsAdding] = useState(false);
   const [form] = Form.useForm();
   const [data, setData] = useState(initialData);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [filteredData, setFilteredData] = useState(initialData);
 
   useEffect(() => {
@@ -25,7 +35,7 @@ export default function StockCategory({ categoryTitle, initialData }) {
   const handleQueryChange = useCallback(
     debounce((value) => {
       const lowercasedQuery = value.toLowerCase();
-      const filtered = data.filter(item => 
+      const filtered = data.filter((item) =>
         item.name.toLowerCase().includes(lowercasedQuery)
       );
       setFilteredData(filtered);
@@ -42,9 +52,30 @@ export default function StockCategory({ categoryTitle, initialData }) {
   const handleBackClick = () => {
     navigate("/ManageStock");
   };
+  const test = (record: any) => {
+    console.log(record);
+  };
 
   const columns = [
-    { title: "รหัสรายการ", dataIndex: "codelist", key: "codelist" },
+    {
+      title: "รหัสรายการ",
+      //dataIndex: "codelist",
+      key: "codelist",
+      // onCell: (record: any) => {
+      //   return { onclick: () => test(record), };
+      // },
+      render: (record) => {
+        return (
+          <button
+            onClick={() => test(record)}
+           
+          >
+            edit
+          </button>
+        );
+      }
+      
+    },
     { title: "รหัสสินค้า", dataIndex: "code", key: "code" },
     { title: "ชื่อสินค้า", dataIndex: "name", key: "name" },
     { title: "จำนวน ", dataIndex: "quantity", key: "quantity" },
@@ -68,7 +99,7 @@ export default function StockCategory({ categoryTitle, initialData }) {
       date_in: values.importDate.format("YYYY-MM-DDTHH:mm:ssZ"), // เปลี่ยนเป็น date_in
       expiration_date: values.expiryDate.format("YYYY-MM-DDTHH:mm:ssZ"), // เปลี่ยนเป็น expiration_date
       supplier_id: 2, // เปลี่ยนเป็น supplier_id
-      employee_id: 1  // เปลี่ยนเป็น employee_id
+      employee_id: 1, // เปลี่ยนเป็น employee_id
     };
     console.log("add_naw", newItem);
     try {
@@ -84,11 +115,11 @@ export default function StockCategory({ categoryTitle, initialData }) {
       console.error("Error adding stock:", error);
     }
   };
-  
 
   return (
     <Layout>
-      <Header className="header"
+      <Header
+        className="header"
         style={{
           backgroundColor: "#fff",
           padding: "0 20px",
@@ -97,7 +128,9 @@ export default function StockCategory({ categoryTitle, initialData }) {
           alignItems: "center",
         }}
       >
-        <h1 style={{ margin: 0, fontSize:'24px' }}>สินค้าประเภท {categoryTitle}</h1>
+        <h1 style={{ margin: 0, fontSize: "24px" }}>
+          สินค้าประเภท {categoryTitle}
+        </h1>
         <Input
           placeholder="ค้นหาชื่อสินค้า"
           style={{ width: 300 }}
@@ -129,7 +162,15 @@ export default function StockCategory({ categoryTitle, initialData }) {
             <Col span={18}>
               <Table dataSource={filteredData} columns={columns} />
             </Col>
-            <Col span={6} style={{background: '#ffffff',borderRadius: '8px', padding: '20px' ,boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'}}>
+            <Col
+              span={6}
+              style={{
+                background: "#ffffff",
+                borderRadius: "8px",
+                padding: "20px",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+              }}
+            >
               <Form
                 form={form}
                 layout="vertical"
@@ -171,7 +212,9 @@ export default function StockCategory({ categoryTitle, initialData }) {
                 <Form.Item
                   label="ผู้จัดจำหน่าย"
                   name="supplier"
-                  rules={[{ required: true, message: "กรุณาเลือกผู้จัดจำหน่าย" }]}
+                  rules={[
+                    { required: true, message: "กรุณาเลือกผู้จัดจำหน่าย" },
+                  ]}
                 >
                   <Select placeholder="เลือกผู้จัดจำหน่าย">
                     <Option value="Supplier A">Supplier A</Option>
@@ -183,7 +226,9 @@ export default function StockCategory({ categoryTitle, initialData }) {
                 <Form.Item
                   label="วันที่นำเข้า"
                   name="importDate"
-                  rules={[{ required: true, message: "กรุณาเลือกวันที่นำเข้า" }]}
+                  rules={[
+                    { required: true, message: "กรุณาเลือกวันที่นำเข้า" },
+                  ]}
                 >
                   <DatePicker
                     style={{ width: "100%" }}
