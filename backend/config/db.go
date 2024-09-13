@@ -113,7 +113,7 @@ func SetupDatabase() {
 
 	StocksMap :=[]entity.Stock{
 		{ProductID:getProductID(db,"B001"),Quantity:30,Price:25,DateIn:parseDate("2024-08-22 14:00"),ExpirationDate:parseDate("2025-08-22 14:00"),  SupplierID:getSupplierIDByName(db, "Supplier F"),EmployeeID:getEmployeeId(db,1)},
-		{ProductID:getProductID(db,"B001"),Quantity:100,Price:150,DateIn:parseDate("2024-08-22 14:00"),ExpirationDate:parseDate("2025-08-22 14:00"),SupplierID:getSupplierIDByName(db, "Supplier A"),EmployeeID:getEmployeeId(db,1),},
+		{ProductID:getProductID(db,"B002"),Quantity:100,Price:150,DateIn:parseDate("2024-08-22 14:00"),ExpirationDate:parseDate("2025-08-22 14:00"),SupplierID:getSupplierIDByName(db, "Supplier A"),EmployeeID:getEmployeeId(db,1),},
 	}
 	for _, stock := range StocksMap {
 		db.FirstOrCreate(&stock, entity.Stock{ProductID: stock.ProductID, SupplierID: stock.SupplierID, DateIn: stock.DateIn})

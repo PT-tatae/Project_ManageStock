@@ -47,6 +47,7 @@ export default function StockCategory({
   const [products, setProducts] = useState([]); // รายชื่อสินค้า
   const [formDisabled, setFormDisabled] = useState(false); //
   const [open, setOpen] = useState(false); //  42 and 43 เป็นลูกเล่นเปิดปิด form
+  const [searchTimeout, setSearchTimeout] = useState(null); //ดีเลเวลานะจ๊ะ
 
   useEffect(() => {
     setFilteredData(initialData);
@@ -82,12 +83,24 @@ export default function StockCategory({
     }
   }, [filteredData]);
 
-  const handleQueryChange = (value) => {
-    const lowercasedQuery = value.toLowerCase();
-    const filtered = initialData.filter((item) =>
-      item.name.toLowerCase().includes(lowercasedQuery)
-    );
-    setFilteredData(filtered);
+
+  
+
+
+   const handleQueryChange = (value) => {
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+
+    const timeout = setTimeout(() => {
+      const lowercasedQuery = value.toLowerCase();
+      const filtered = initialData.filter((item) =>
+        item.name.toLowerCase().includes(lowercasedQuery)
+      );
+      setFilteredData(filtered);
+    }, 500); // หน่วงเวลา 500ms
+
+    setSearchTimeout(timeout);
   };
 
   const handleInputChange = (e) => {
@@ -171,11 +184,19 @@ export default function StockCategory({
       if (editingRecord) {
         // แก้ไขข้อมูลเดิม
         const updatedItem: Update = {
-          ...newItem,
+          
           stock_id: Number(editingRecord.stock_id), // แปลงเป็น number
+          category_id: categoryID,
+          product_code_id: values.code,
+          product_name: values.name,
+          quantity: Number(values.quantity),
+          price: Number(values.price),
+          supplier_id: Number(values.supplier), // แปลงเป็น number
+          employee_id: 1, //ยังไม่ได้เชื่อมกับเพื่อน
         };
+
         //result = await UpdateStock(updatedItem); // เรียกฟังก์ชัน API สำหรับการแก้ไข
-        //console.log("updatedItem",updatedItem);
+        console.log("updatedItem",updatedItem);
         result = await UpdateStock(updatedItem);
       } else {
         // เพิ่มข้อมูลใหม่
@@ -364,7 +385,7 @@ export default function StockCategory({
                   <DatePicker
                     style={{ width: "100%" }}
                     showTime={{ format: "HH:mm" }}
-                    format="M/D/YYYY HH:mm"
+                    format={isDatePickerDisabled == true ? "M/D/YYYY ":"M/D/YYYY HH:mm"}
                     disabled={isDatePickerDisabled}
                   />
                 </Form.Item>
@@ -377,11 +398,11 @@ export default function StockCategory({
                   <DatePicker
                     style={{ width: "100%" }}
                     showTime={{ format: "HH:mm" }}
-                    format="M/D/YYYY HH:mm"
+                    format={isDatePickerDisabled == true ? "M/D/YYYY ":"M/D/YYYY HH:mm"}
                     disabled={isDatePickerDisabled}
                   />
                 </Form.Item>
-
+                
                 <Form.Item>
                   <Button type="primary" htmlType="submit">
                     {editingRecord ? "บันทึก" : "เพิ่ม"}

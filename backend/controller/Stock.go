@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"time"
 	"fmt"
+	"sort"
 	
 
 	"github.com/gin-gonic/gin"
@@ -20,8 +21,8 @@ type InputUpdateStock struct {
 	ProductName     string    `json:"product_name"`
 	Quantity        uint      `json:"quantity"`
 	Price           float64   `json:"price"`
-	DateIn          time.Time `json:"date_in"`
-	ExpirationDate  time.Time `json:"expiration_date"`
+	//DateIn          time.Time `json:"date_in"`
+	//ExpirationDate  time.Time `json:"expiration_date"`
 	SupplierID      uint      `json:"supplier_id"`
 	EmployeeID      uint      `json:"employee_id"`
 }
@@ -62,8 +63,8 @@ func UpdateStock(c *gin.Context) {
 	// อัปเดตข้อมูล stock ที่มีอยู่
 	stock.Quantity = data.Quantity
 	stock.Price = data.Price
-	stock.DateIn = data.DateIn
-	stock.ExpirationDate = data.ExpirationDate
+	//stock.DateIn = data.DateIn
+	//stock.ExpirationDate = data.ExpirationDate
 	stock.SupplierID = &data.SupplierID
 	stock.EmployeeID = &data.EmployeeID
 
@@ -159,6 +160,10 @@ func GetStock(c *gin.Context) {
 			}
 		}
 	}
+	// จัดเรียงข้อมูลตาม stock_id
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].StockID < result[j].StockID
+	})
 
 	c.JSON(http.StatusOK, gin.H{"data": result})
 }
