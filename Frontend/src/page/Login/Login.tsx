@@ -11,22 +11,24 @@ function LoginPages() {
 
   const onFinish = async (values: LoginInterface) => {
     let res = await SignIn(values);
-
-    if (res.status === 200) {
+    console.log("Response:", res);
+  
+    // ตรวจสอบว่ามี token และตอบกลับถูกต้อง
+    if (res && res.token) {
       messageApi.success("Login successful");
       localStorage.setItem("isLogin", "true");
       localStorage.setItem("page", "dashboard");
-      localStorage.setItem("token_type", res.data.token_type);
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("id", res.data.id);
-      localStorage.setItem("firstName", res.data.firstName);
-      localStorage.setItem("lastName", res.data.lastName);
-      localStorage.setItem("positionID", res.data.positionID);
+      localStorage.setItem("token_type", res.token_type);
+      localStorage.setItem("token", res.token);
+      localStorage.setItem("id", res.id);
+      localStorage.setItem("firstName", res.firstName);
+      localStorage.setItem("lastName", res.lastName);
+      localStorage.setItem("positionID", res.positionID);
       setTimeout(() => {
         navigate("/ManageStock");
       }, 2000);
     } else {
-      messageApi.error(res.data.error);
+      messageApi.error("Login failed");
     }
   };
 

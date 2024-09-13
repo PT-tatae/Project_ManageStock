@@ -2,7 +2,7 @@ import { IStock } from "../../interfaces/IStock.tsx";
 import { Update} from "../../interfaces/Update.tsx";
 import {LoginInterface} from "../../interfaces/Login.tsx"
 
-import axios from "axios";
+
 
 const apiUrl = "http://localhost:8000";
 
@@ -122,12 +122,14 @@ async function GetSupplierName() {
 }
 
 async function SignIn(data: LoginInterface) {
+  console.log("data",data);
+  
   try {
     const response = await fetch(`${apiUrl}/signIn`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${Authorization}`,
+        //Authorization: `Bearer ${Authorization}`,
       },
       body: JSON.stringify(data),
     });
