@@ -112,19 +112,16 @@ export default function StockCategory({
   };
 
   const handleEditClick = (record) => {
-    // ฟังก์ชันเริ่มการแก้ไขข้อมูล
     console.log("record",record);
     
-    
-    const importDateMoment = moment(record.importDate, "M/D/YYYY "); 
-    const expiryDateMoment = moment(record.expiryDate, "M/D/YYYY ");
-
+    // ฟังก์ชันการแก้ไขข้อมูล
     /* 
         ปัญหาอยู่ที่ DatePicker ทำให้ไม่สามารถยิงเวลาไปโชว์ที่ Form ได้กำลังเร่งหา lib ตัวใหม่ครับ
-        ทำให้เวลามีข้อมูลใน form มันจะบัคทั้งการโชว์และเลือกเวลา
+        ทำให้เวลามีข้อมูลใน form มันจะบัคทั้งการโชว์และเลือกเวลา 00:00
     */
 
-    
+    const importDateMoment = moment(record.importDate, "M/D/YYYY HH:mm:ss");
+    const expiryDateMoment = moment(record.expiryDate, "M/D/YYYY HH:mm:ss");
     console.log("แปลงวันที่",{importDateMoment,expiryDateMoment});
     
 
@@ -164,8 +161,8 @@ export default function StockCategory({
       price: Number(values.price),
       date_in: values.importDate.format("YYYY-MM-DDTHH:mm:ssZ"),
       expiration_date: values.expiryDate.format("YYYY-MM-DDTHH:mm:ssZ"),
-      supplier_id: Number(values.supplier), 
-      employee_id: 1, 
+      supplier_id: Number(values.supplier), // แปลงเป็น number
+      employee_id: 1, //ยังไม่ได้เชื่อมกับเพื่อน
     };
 
     try {
@@ -175,14 +172,16 @@ export default function StockCategory({
         // แก้ไขข้อมูลเดิม
         const updatedItem: Update = {
           ...newItem,
-          stock_id: Number(editingRecord.stock_id), 
+          stock_id: Number(editingRecord.stock_id), // แปลงเป็น number
         };
-        
+        //result = await UpdateStock(updatedItem); // เรียกฟังก์ชัน API สำหรับการแก้ไข
+        //console.log("updatedItem",updatedItem);
         result = await UpdateStock(updatedItem);
       } else {
-      
+        // เพิ่มข้อมูลใหม่
         result = await AddStock(newItem);
       }
+
       if (result) {
         window.location.reload();
       }
@@ -377,7 +376,6 @@ export default function StockCategory({
                 >
                   <DatePicker
                     style={{ width: "100%" }}
-                    defaultValue={moment("YYYY/MM/DD HH:mm")}
                     showTime={{ format: "HH:mm" }}
                     format="M/D/YYYY HH:mm"
                     disabled={isDatePickerDisabled}

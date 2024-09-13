@@ -3,15 +3,13 @@ import { Layout, Button, Row, Col, AutoComplete } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import Supplier from "../../assets/ImgStock/phone.png";
-
-import Meat from "../../assets/ImgStock/meat.png"
-import Vegetable from "../../assets/ImgStock/vegetable.png"
-import Seafood from "../../assets/ImgStock/Seafood.png"
-import NoodlesAndDough from "../../assets/ImgStock/NoodlesAndDough.jpeg"
-import BeveragesAndDesserts from "../../assets/ImgStock/BeveragesAndDesserts.png"
-import Condiment from "../../assets/ImgStock/CondimentsAndSauce.png"
-
-import CategoryCard from "../../Compornent/Category/CategoryCard"; 
+import Meat from "../../assets/ImgStock/meat.png";
+import Vegetable from "../../assets/ImgStock/vegetable.png";
+import Seafood from "../../assets/ImgStock/Seafood.png";
+import NoodlesAndDough from "../../assets/ImgStock/NoodlesAndDough.jpeg";
+import BeveragesAndDesserts from "../../assets/ImgStock/BeveragesAndDesserts.png";
+import Condiment from "../../assets/ImgStock/CondimentsAndSauce.png";
+import CategoryCard from "../../Compornent/Category/CategoryCard";
 import './Mangestock.css';  // Import the CSS file
 
 const { Header, Content } = Layout;
@@ -56,7 +54,6 @@ export default function ManageStock() {
       description: "เช่นน้ำอัดลม น้ำพลั้น ไอศครีม เป็นต้น",
       link: "/ManageStock/BeveragesAndDesserts",
     },
-    // Add more categories as needed
   ];
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -77,7 +74,6 @@ export default function ManageStock() {
   const options = filteredCategories.map((category) => ({
     value: category.title,
     label: category.title,
-    onClick: () => handleCategoryClick(category.link)
   }));
 
   return (
@@ -87,9 +83,12 @@ export default function ManageStock() {
         <AutoComplete
           className="autocomplete"
           options={options}
-          onSelect={(value, option) => option.onClick()}
+          onSearch={handleSearch}
+          onSelect={(value) => handleSearch(value)}
           placeholder="ค้นหาชื่อหมวดหมู่สินค้า"
           suffixIcon={<SearchOutlined />}
+          value={searchQuery}
+          onChange={setSearchQuery} // To update the searchQuery as the user types
         />
       </Header>
       <Content className="content">
@@ -99,16 +98,16 @@ export default function ManageStock() {
               <h1>หมวดหมู่ประเภทคลังสินค้า</h1>
             </Row>
             <div className="category-list">
-            {filteredCategories.map((category, index) => (
-              <CategoryCard
-                key={index}
-                imgSrc={category.imgSrc}
-                title={category.title}
-                description={category.description}
-                link={category.link}
-                onClick={() => handleCategoryClick(category.link)}
-              />
-            ))}
+              {filteredCategories.map((category, index) => (
+                <CategoryCard
+                  key={index}
+                  imgSrc={category.imgSrc}
+                  title={category.title}
+                  description={category.description}
+                  link={category.link}
+                  onClick={() => handleCategoryClick(category.link)}
+                />
+              ))}
             </div>
           </Col>
 
@@ -131,9 +130,6 @@ export default function ManageStock() {
                 </div>
                 <div className="supplier-info">
                   <h1>ดูข้อมูลผู้จัดจำหน่าย</h1>
-                  {/* <h1 className="supplier-info-text">
-                    กรุณาเพิ่มข้อมูลผู้จัดหา (Supplier) ก่อนเพิ่มข้อมูลสินค้า
-                  </h1> */}
                 </div>
               </div>
             </Row>

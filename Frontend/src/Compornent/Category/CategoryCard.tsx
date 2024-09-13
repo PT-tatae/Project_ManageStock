@@ -1,5 +1,5 @@
 // CategoryCard.js
-import React from "react";
+
 import { Button, Row, Col } from "antd";
 import { Link } from "react-router-dom";
 import './CategoryCard.css'
