@@ -126,14 +126,14 @@ export default function ManageStock() {
                     className="supplier-img"
                   />
                   <Button className="button-link" type="primary" onClick={() => navigate("/ManageStock/Supplier")}>
-                    จัดการข้อมูลผู้จัดหา
+                    ข้อมูลผู้จัดหา
                   </Button>
                 </div>
                 <div className="supplier-info">
-                  <h1>คำแนะนำ</h1>
-                  <h1 className="supplier-info-text">
+                  <h1>ดูข้อมูลผู้จัดจำหน่าย</h1>
+                  {/* <h1 className="supplier-info-text">
                     กรุณาเพิ่มข้อมูลผู้จัดหา (Supplier) ก่อนเพิ่มข้อมูลสินค้า
-                  </h1>
+                  </h1> */}
                 </div>
               </div>
             </Row>
