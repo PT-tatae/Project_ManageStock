@@ -16,10 +16,14 @@ import {
   PlusSquareOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { debounce } from "lodash";
-import { IStock} from "../../interfaces/IStock.tsx";
-import { Update} from "../../interfaces/Update.tsx";
-import { AddStock, GetSupplierName ,UpdateStock} from "../../services/https/index.tsx";
+//import { debounce } from "lodash";
+import { IStock } from "../../interfaces/IStock.tsx";
+import { Update } from "../../interfaces/Update.tsx";
+import {
+  AddStock,
+  GetSupplierName,
+  UpdateStock,
+} from "../../services/https/index.tsx";
 import moment from "moment";
 
 const { Header, Content } = Layout;
@@ -34,9 +38,9 @@ export default function StockCategory({
   const [isAdding, setIsAdding] = useState(false); // แสดง/ไม่แสดง ของ form หลัก
   const [isDatePickerDisabled, setIsDatePickerDisabled] = useState(false); //ลูกเล่นปิด/เปิด form Disabled
   const [form] = Form.useForm();
-  const [data] = useState(initialData); //รับข้อมูลมา
+  //const [data] = useState(initialData); //รับข้อมูลมา
   const [query, setQuery] = useState(""); // การค้นหา
-  const [filteredData, setFilteredData] = useState(initialData);  // ข้อมูลที่ฟิวเตอร์แล้ว
+  const [filteredData, setFilteredData] = useState(initialData); // ข้อมูลที่ฟิวเตอร์แล้ว
   const [editingRecord, setEditingRecord] = useState(null); // ข้อมูลที่กำลังแก้ไข
   const [suppliers, setSuppliers] = useState([]); // รายชื่อผู้จัดจำหน่าย
   const [products, setProducts] = useState([]); // รายชื่อสินค้า
@@ -63,7 +67,8 @@ export default function StockCategory({
   }, []);
 
   useEffect(() => {
-    if (filteredData.length > 0) {  // กรองสินค้าที่ไม่ซ้ำจากข้อมูลที่กรองแล้ว
+    if (filteredData.length > 0) {
+      // กรองสินค้าที่ไม่ซ้ำจากข้อมูลที่กรองแล้ว
       const uniqueCodes = new Set();
       const mappedProducts = filteredData.reduce((acc, item) => {
         if (!uniqueCodes.has(item.code)) {
@@ -76,19 +81,16 @@ export default function StockCategory({
     }
   }, [filteredData]);
 
-  const handleQueryChange = useCallback(
-    debounce((value) => { // ฟังก์ชันค้นหาข้อมูลแบบดีเลย์
-      const lowercasedQuery = value.toLowerCase();
-      const filtered = data.filter((item) =>
-        item.name.toLowerCase().includes(lowercasedQuery)
-      );
-      setFilteredData(filtered);
-    }, 300),
-    [data]
-  );
+  const handleQueryChange = (value) => {
+    const lowercasedQuery = value.toLowerCase();
+    const filtered = initialData.filter((item) =>
+      item.name.toLowerCase().includes(lowercasedQuery)
+    );
+    setFilteredData(filtered);
+  };
 
   const handleInputChange = (e) => {
-    const value = e.target.value; // จัดการการเปลี่ยนแปลงของ input ค้นหา
+    const value = e.target.value;
     setQuery(value);
     handleQueryChange(value);
   };
@@ -108,12 +110,30 @@ export default function StockCategory({
     }
   };
 
-  const handleEditClick = (record) => { // ฟังก์ชันเริ่มการแก้ไขข้อมูล
-    const importDateMoment = moment(record.importDate, "M/D/YYYY hh:mm:ss");
-    const expiryDateMoment = moment(record.expiryDate, "M/D/YYYY hh:mm:ss");
+  const handleEditClick = (record) => {
+    // ฟังก์ชันเริ่มการแก้ไขข้อมูล
+    // ฟังก์ชันสำหรับ parse วันที่และเวลา
+    const parseDateTime = (dateTimeString) => {
+      return moment(dateTimeString, "M/D/YYYY, h:mm:ss A");
+    };
+
+    const importDateMoment = parseDateTime(record.importDate);
+    const expiryDateMoment = parseDateTime(record.expiryDate);
+
+    console.log("Original importDate:", record.importDate);
+    console.log(
+      "Parsed importDate:",
+      importDateMoment.format("M/D/YYYY HH:mm:ss")
+    );
+    console.log("Original expiryDate:", record.expiryDate);
+    console.log(
+      "Parsed expiryDate:",
+      expiryDateMoment.format("M/D/YYYY HH:mm:ss")
+    );
+
     setEditingRecord({
       ...record,
-      stock_id: record.code_stock,  // เพิ่ม stock_id (รหัสรายการ)
+      stock_id: record.code_stock, // เพิ่ม stock_id (รหัสรายการ)
     });
     form.setFieldsValue({
       code: record.code,
@@ -150,10 +170,10 @@ export default function StockCategory({
       supplier_id: Number(values.supplier), // แปลงเป็น number
       employee_id: 1, //ยังไม่ได้เชื่อมกับเพื่อน
     };
-  
+
     try {
       let result;
-  
+
       if (editingRecord) {
         // แก้ไขข้อมูลเดิม
         const updatedItem: Update = {
@@ -163,20 +183,18 @@ export default function StockCategory({
         //result = await UpdateStock(updatedItem); // เรียกฟังก์ชัน API สำหรับการแก้ไข
         //console.log("updatedItem",updatedItem);
         result = await UpdateStock(updatedItem);
-        
       } else {
         // เพิ่มข้อมูลใหม่
-        result = await AddStock(newItem); 
+        result = await AddStock(newItem);
       }
-  
+
       if (result) {
-        window.location.reload(); 
+        window.location.reload();
       }
     } catch (error) {
       console.error("Error in submitting stock:", error);
     }
   };
-  
 
   const openForm = () => {
     setIsAdding(true);
@@ -277,7 +295,7 @@ export default function StockCategory({
                         placeholder="เลือกรหัสสินค้า"
                         onChange={handleProductSelect}
                         disabled={open}
-                        value={form.getFieldValue('code')}
+                        value={form.getFieldValue("code")}
                       >
                         {products.map((product) => (
                           <Option key={product.code} value={product.code}>
@@ -351,8 +369,8 @@ export default function StockCategory({
                 >
                   <DatePicker
                     style={{ width: "100%" }}
-                    showTime={{ format: "HH:mm" }}
-                    format="M/D/YYYY HH:mm:ss"
+                    showTime={{ format: "HH:mm" }} // รูปแบบ 24 ชั่วโมง
+                    format="M/D/YYYY HH:mm" // รูปแบบที่ใช้ใน DatePicker
                     disabled={isDatePickerDisabled}
                   />
                 </Form.Item>
@@ -364,8 +382,8 @@ export default function StockCategory({
                 >
                   <DatePicker
                     style={{ width: "100%" }}
-                    showTime={{ format: "HH:mm" }}
-                    format="M/D/YYYY HH:mm:ss"
+                    showTime={{ format: "HH:mm" }} // รูปแบบ 24 ชั่วโมง
+                    format="M/D/YYYY HH:mm"
                     disabled={isDatePickerDisabled}
                   />
                 </Form.Item>
