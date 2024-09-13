@@ -73,7 +73,7 @@ async function AddStock(newStock: IStock) {
 }
 
 async function UpdateStock(updateStock: Update) {
-  console.log("เตรียมข้อมูล",UpdateStock);
+  console.log("เตรียมข้อมูล",updateStock);
   
   try {
     const response = await fetch(`${apiUrl}/UpdateStock`, {

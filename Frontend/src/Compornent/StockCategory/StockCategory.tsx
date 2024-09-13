@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import {
   Layout,
   Input,
@@ -16,7 +16,6 @@ import {
   PlusSquareOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-//import { debounce } from "lodash";
 import { IStock } from "../../interfaces/IStock.tsx";
 import { Update } from "../../interfaces/Update.tsx";
 import {
@@ -25,6 +24,8 @@ import {
   UpdateStock,
 } from "../../services/https/index.tsx";
 import moment from "moment";
+
+
 
 const { Header, Content } = Layout;
 const { Option } = Select;
@@ -112,24 +113,20 @@ export default function StockCategory({
 
   const handleEditClick = (record) => {
     // ฟังก์ชันเริ่มการแก้ไขข้อมูล
-    // ฟังก์ชันสำหรับ parse วันที่และเวลา
-    const parseDateTime = (dateTimeString) => {
-      return moment(dateTimeString, "M/D/YYYY, h:mm:ss A");
-    };
+    console.log("record",record);
+    
+    
+    const importDateMoment = moment(record.importDate, "M/D/YYYY "); 
+    const expiryDateMoment = moment(record.expiryDate, "M/D/YYYY ");
 
-    const importDateMoment = parseDateTime(record.importDate);
-    const expiryDateMoment = parseDateTime(record.expiryDate);
+    /* 
+        ปัญหาอยู่ที่ DatePicker ทำให้ไม่สามารถยิงเวลาไปโชว์ที่ Form ได้กำลังเร่งหา lib ตัวใหม่ครับ
+        ทำให้เวลามีข้อมูลใน form มันจะบัคทั้งการโชว์และเลือกเวลา
+    */
 
-    console.log("Original importDate:", record.importDate);
-    console.log(
-      "Parsed importDate:",
-      importDateMoment.format("M/D/YYYY HH:mm:ss")
-    );
-    console.log("Original expiryDate:", record.expiryDate);
-    console.log(
-      "Parsed expiryDate:",
-      expiryDateMoment.format("M/D/YYYY HH:mm:ss")
-    );
+    
+    console.log("แปลงวันที่",{importDateMoment,expiryDateMoment});
+    
 
     setEditingRecord({
       ...record,
@@ -167,8 +164,8 @@ export default function StockCategory({
       price: Number(values.price),
       date_in: values.importDate.format("YYYY-MM-DDTHH:mm:ssZ"),
       expiration_date: values.expiryDate.format("YYYY-MM-DDTHH:mm:ssZ"),
-      supplier_id: Number(values.supplier), // แปลงเป็น number
-      employee_id: 1, //ยังไม่ได้เชื่อมกับเพื่อน
+      supplier_id: Number(values.supplier), 
+      employee_id: 1, 
     };
 
     try {
@@ -178,16 +175,14 @@ export default function StockCategory({
         // แก้ไขข้อมูลเดิม
         const updatedItem: Update = {
           ...newItem,
-          stock_id: Number(editingRecord.stock_id), // แปลงเป็น number
+          stock_id: Number(editingRecord.stock_id), 
         };
-        //result = await UpdateStock(updatedItem); // เรียกฟังก์ชัน API สำหรับการแก้ไข
-        //console.log("updatedItem",updatedItem);
+        
         result = await UpdateStock(updatedItem);
       } else {
-        // เพิ่มข้อมูลใหม่
+      
         result = await AddStock(newItem);
       }
-
       if (result) {
         window.location.reload();
       }
@@ -369,8 +364,8 @@ export default function StockCategory({
                 >
                   <DatePicker
                     style={{ width: "100%" }}
-                    showTime={{ format: "HH:mm" }} // รูปแบบ 24 ชั่วโมง
-                    format="M/D/YYYY HH:mm" // รูปแบบที่ใช้ใน DatePicker
+                    showTime={{ format: "HH:mm" }}
+                    format="M/D/YYYY HH:mm"
                     disabled={isDatePickerDisabled}
                   />
                 </Form.Item>
@@ -382,7 +377,8 @@ export default function StockCategory({
                 >
                   <DatePicker
                     style={{ width: "100%" }}
-                    showTime={{ format: "HH:mm" }} // รูปแบบ 24 ชั่วโมง
+                    defaultValue={moment("YYYY/MM/DD HH:mm")}
+                    showTime={{ format: "HH:mm" }}
                     format="M/D/YYYY HH:mm"
                     disabled={isDatePickerDisabled}
                   />
