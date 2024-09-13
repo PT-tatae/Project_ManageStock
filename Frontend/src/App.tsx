@@ -16,7 +16,7 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Sidebar />} />
+        <Route path="/" element={<Login />} />
         <Route path="/ManageStock" element={<Sidebar />}>
           <Route index element={<ManageStock />} />
           <Route path="Meat" element={<StockMeat />} />

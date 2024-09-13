@@ -21,6 +21,9 @@ func main() {
 
 	r.Use(CORSMiddleware())
 
+	// Auth Route
+	r.POST("/signIn", controller.SignIn)
+
 	router := r.Group("")
 	{
 		router.GET("/Stock/:category_id", controller.GetStock)
