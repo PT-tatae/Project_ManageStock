@@ -16,10 +16,16 @@ type Employee struct {
     Email     string    `json:"email"`
 
     Password     string    `json:"password"`
-	
-	Gender     string   `json:"gender"`
 
-	Position   string   `json:"position"`
+	Profile   		string 		`gorm:"type:longtext"`
+	
+	// FK from Gender
+	GenderID		uint
+	Gender			Gender 		`gorm:"foreignKey: gender_id"`
+	// FK from Position
+	PositionID		uint
+	Position		Position 	`gorm:"foreignKey: position_id"`
+
 
 	//Employee 1 to 1..* Product
 

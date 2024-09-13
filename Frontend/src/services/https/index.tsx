@@ -1,6 +1,8 @@
 import { IStock } from "../../interfaces/IStock.tsx";
 import { Update} from "../../interfaces/Update.tsx";
+import {LoginInterface} from "../../interfaces/Login.tsx"
 
+import axios from "axios";
 
 const apiUrl = "http://localhost:8000";
 
@@ -119,9 +121,35 @@ async function GetSupplierName() {
   }
 }
 
+async function SignIn(data: LoginInterface) {
+  try {
+    const response = await fetch(`${apiUrl}/signIn`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Authorization}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      // Check response status and handle errors
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    const responseData = await response.json();
+    return responseData;
+  } catch (error) {
+    console.error("Error signing in:", error);
+    return null;
+  }
+}
+
+
 export { GetStock,
   GetDataSupplier,
   AddStock,
   UpdateStock,
   GetSupplierName,
+  SignIn,
  };

@@ -19,7 +19,7 @@ export default function ManageStock() {
 
   const categories = [
     {
-      imgSrc: Meat,
+      imgSrc: Meat,  
       title: "เนื้อสัตว์ (Meats)",
       description: "เช่นเนื้อหมู วัว ไก่ ปลา เป็นต้น",
       link: "/ManageStock/Meat",

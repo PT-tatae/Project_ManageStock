@@ -7,7 +7,6 @@ import StockMeat from "./page/StockMeat/StockMeat";
 import Supplier from "./page/Supplier/Suppliper";
 import StockVegetable from "./page/StockVegetable/StockVegetable";
 import StockCondimentsAndSauce from './page/StockCondimentsAndSauce/StockCondimentsAndSauce';
-import StockCategory from "./Compornent/StockCategory/StockCategory";
 import StockSeafood from './page/StockSeafood/StockSeafood';
 import StockNoodlesAndDough from './page/StockNoodlesAndDough/StockNoodlesAndDough';
 import StockBeveragesAndDesserts from './page/StockBeveragesAndDesserts/StockBeveragesAndDesserts';
@@ -17,7 +16,7 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<StockCategory />} />
+        <Route path="/" element={<Sidebar />} />
         <Route path="/ManageStock" element={<Sidebar />}>
           <Route index element={<ManageStock />} />
           <Route path="Meat" element={<StockMeat />} />

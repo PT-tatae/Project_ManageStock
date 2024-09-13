@@ -1,53 +1,78 @@
-// src/components/Login.tsx
-import React, { useState } from "react";
+import { Button, Card, Form, Input, message, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
-import "./Login.css"; // หากมี CSS ที่ต้องใช้
+import { SignIn } from "../../services/https";
+import { LoginInterface } from "../../interfaces/Login";
+import logo from "../../assets/ImgLogo/Logo.png";
+import "./Login.css";
 
-function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+function LoginPages() {
   const navigate = useNavigate();
+  const [messageApi, contextHolder] = message.useMessage();
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    // ตรวจสอบการ login ที่นี่
-    if (username === "1" && password === "1") {
-      navigate("/ManageStock"); 
+  const onFinish = async (values: LoginInterface) => {
+    let res = await SignIn(values);
+
+    if (res.status === 200) {
+      messageApi.success("Login successful");
+      localStorage.setItem("isLogin", "true");
+      localStorage.setItem("page", "dashboard");
+      localStorage.setItem("token_type", res.data.token_type);
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("id", res.data.id);
+      localStorage.setItem("firstName", res.data.firstName);
+      localStorage.setItem("lastName", res.data.lastName);
+      localStorage.setItem("positionID", res.data.positionID);
+      setTimeout(() => {
+        navigate("/ManageStock");
+      }, 2000);
     } else {
-      alert("ซื่อหรือรหัสผ่านไม่ถูกต้อง");
+      messageApi.error(res.data.error);
     }
   };
 
   return (
     <>
-      
+      {contextHolder}
       <div className="login-container">
-      <div className="circle "></div>
-        <h1 className="text-login">Login</h1>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <h1 className="text-username">Username</h1>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
-          <div>
-            <h1 className="text-password">Password</h1>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <div>
-            <button type="submit">Login</button>
-          </div>
-        </form>
+        
+        <Card className="card-login">
+          <Form name="login" onFinish={onFinish} layout="vertical">
+            <Row gutter={[16, 8]} style={{padding:"30px", justifyContent:"center"}}>
+              <img className="logo" src={logo} alt="Logo" />
+
+              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                <Form.Item
+                  label="Email"
+                  name="email"
+                  rules={[{ required: true, message: "Please input your email!" }]}
+                >
+                  <Input placeholder="กรุณากรอกอีเมล" className="login-form"/>
+                </Form.Item>
+              </Col>
+
+              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                <Form.Item
+                  label="Password"
+                  name="password"
+                  rules={[{ required: true, message: "Please input your password!" }]}
+                >
+                  <Input.Password placeholder="กรุณากรอกรหัสผ่าน" className="login-form"/>
+                </Form.Item>
+              </Col>
+
+              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit" className="login-button">
+                    Login
+                  </Button>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        </Card>
       </div>
     </>
   );
 }
 
-export default Login;
+export default LoginPages;
