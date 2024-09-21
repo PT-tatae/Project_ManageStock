@@ -1,157 +1,207 @@
-import { IStock } from "../../interfaces/IStock.tsx";
-import { Update} from "../../interfaces/Update.tsx";
-import {LoginInterface} from "../../interfaces/Login.tsx"
-
-
+import { EmployeeInterface } from "../../interfaces/Employee";
+import { LoginInterface } from "../../interfaces/Login";
+import { MemberInterface } from "../../interfaces/Member";
+import { StockInterface } from "../../interfaces/Stock";
+import axios from "axios";
 
 const apiUrl = "http://localhost:8000";
+const Authorization = localStorage.getItem("token");
+const Bearer = localStorage.getItem("token_type");
 
+const requestOptions = {
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `${Bearer} ${Authorization}`,
+  },
+};
+
+async function SignIn(data: LoginInterface) {
+  return await axios
+    .post(`${apiUrl}/signIn`, data, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+async function CreateEmployee(data: EmployeeInterface) {
+  return await axios
+    .post(`${apiUrl}/employee`, data, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+async function GetEmployees() {
+  return await axios
+    .get(`${apiUrl}/employees`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+async function GetEmployeeByID(id: string | undefined) {
+  return await axios
+    .get(`${apiUrl}/employee/${id}`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+async function UpdateEmployee(id: string | undefined, data: EmployeeInterface) {
+  return await axios
+    .patch(`${apiUrl}/employee/${id}`, data, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+async function DeleteEmployeeByID(id: string | undefined) {
+  return await axios
+    .delete(`${apiUrl}/employee/${id}`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+async function CreateMember(data: MemberInterface) {
+  return await axios
+    .post(`${apiUrl}/member`, data, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+async function GetMembers() {
+  return await axios
+    .get(`${apiUrl}/members`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+async function GetMemberByID(id: string | undefined) {
+  return await axios
+    .get(`${apiUrl}/member/${id}`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+async function UpdateMember(id: string | undefined, data: MemberInterface) {
+  return await axios
+    .patch(`${apiUrl}/member/${id}`, data, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+async function DeleteMemberByID(id: string | undefined) {
+  return await axios
+    .delete(`${apiUrl}/member/${id}`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+async function GetGenders() {
+  return await axios
+    .get(`${apiUrl}/genders`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+async function GetPositions() {
+  return await axios
+    .get(`${apiUrl}/positions`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+async function GetRanks() {
+  return await axios
+    .get(`${apiUrl}/ranks`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+async function GetMemberCount() {
+  return await axios
+    .get(`${apiUrl}/memberCountToday`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+async function GetReceipts() {
+  return await axios
+  .get(`${apiUrl}/receipt`, requestOptions)
+  .then((res) => res)
+  .catch((e) => e.response);
+}
+
+async function AddPointsToMember(memberID: string, points: number) {
+  return await axios
+    .patch(
+      `${apiUrl}/member/${memberID}/addPoints`,
+      { points }, 
+      requestOptions
+    )
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+//ของเต้
+// ฟังก์ชันสำหรับดึงข้อมูล Stock ตาม categoryId
 async function GetStock(categoryId: number) {
-  try {
-    const response = await fetch(`${apiUrl}/Stock/${categoryId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      // ตรวจสอบสถานะการตอบกลับ หากไม่ใช่ 200 ให้โยน error
-      throw new Error(`Error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching stock:", error);
-    return null; // คืนค่า null หากมีข้อผิดพลาด
-  }
+  return await axios
+    .get(`${apiUrl}/Stock/${categoryId}`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
 }
 
 // ฟังก์ชันสำหรับดึงข้อมูล Supplier
 async function GetDataSupplier() {
-  try {
-    const response = await fetch(`${apiUrl}/Supplier`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      // ตรวจสอบสถานะการตอบกลับ
-      throw new Error(`Error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching suppliers:", error);
-    return null;
-  }
+  return await axios
+    .get(`${apiUrl}/Supplier`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
 }
 
-async function AddStock(newStock: IStock) {
-  try {
-    const response = await fetch(`${apiUrl}/AddStock`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newStock), // แปลงข้อมูลที่ต้องการส่งเป็น JSON
-
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error adding stock:", error);
-    return null;
-  }
+// ฟังก์ชันสำหรับเพิ่มข้อมูล Stock
+async function AddStock(newStock: StockInterface) {
+  return await axios
+    .post(`${apiUrl}/AddStock`, newStock, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
 }
 
-async function UpdateStock(updateStock: Update) {
-  console.log("เตรียมข้อมูล",updateStock);
-  
-  try {
-    const response = await fetch(`${apiUrl}/UpdateStock`, {
-      method: "PUT", // ใช้ PUT สำหรับการอัปเดตข้อมูล
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updateStock), // ส่งข้อมูลที่จะแก้ไขไปยัง backend
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data; // ส่งข้อมูลที่ตอบกลับจาก backend กลับมา
-  } catch (error) {
-    console.error("Error updating stock:", error);
-    return null;
-  }
-  
+// ฟังก์ชันสำหรับอัปเดต Stock
+async function UpdateStock(updateStock: StockInterface) {
+  return await axios
+    .put(`${apiUrl}/UpdateStock`, updateStock, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
 }
 
+// ฟังก์ชันสำหรับดึงข้อมูลชื่อ Supplier
 async function GetSupplierName() {
-  try {
-    const response = await fetch(`${apiUrl}/SupplierName`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      // ตรวจสอบสถานะการตอบกลับ
-      throw new Error(`Error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching suppliers:", error);
-    return null;
-  }
-}
-
-async function SignIn(data: LoginInterface) {
-  console.log("data",data);
-  
-  try {
-    const response = await fetch(`${apiUrl}/signIn`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        //Authorization: `Bearer ${Authorization}`,
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      // Check response status and handle errors
-      throw new Error(`Error: ${response.status}`);
-    }
-
-    const responseData = await response.json();
-    return responseData;
-  } catch (error) {
-    console.error("Error signing in:", error);
-    return null;
-  }
+  return await axios
+    .get(`${apiUrl}/SupplierName`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
 }
 
 
-export { GetStock,
+
+export {
+  SignIn,
+  CreateEmployee,
+  GetEmployees,
+  GetEmployeeByID,
+  UpdateEmployee,
+  DeleteEmployeeByID,
+  CreateMember,
+  GetMembers,
+  GetMemberByID,
+  UpdateMember,
+  DeleteMemberByID,
+  GetGenders,
+  GetPositions,
+  GetRanks,
+  GetMemberCount,
+  GetReceipts,
+  AddPointsToMember,
   GetDataSupplier,
+  GetStock,
   AddStock,
   UpdateStock,
   GetSupplierName,
-  SignIn,
- };
+};

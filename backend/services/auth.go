@@ -3,7 +3,7 @@ package services
 import (
    "errors"
    "time"
-    "github.com/dgrijalva/jwt-go"
+   jwt "github.com/dgrijalva/jwt-go"
 )
 
 // JwtWrapper wraps the signing key and the issuer

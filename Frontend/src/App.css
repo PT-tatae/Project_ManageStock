@@ -1,8 +1,10 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+body {
+  margin: 0;
 }
 
-
+.logo {
+  object-fit: contain;
+  height: 100px;
+  width: 100px;
+  border-radius: 5%;
+}

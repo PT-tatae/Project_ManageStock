@@ -6,9 +6,9 @@ import (
    "github.com/gin-gonic/gin"
    "golang.org/x/crypto/bcrypt"
 
-   "github.com/Jarntae/Sa_StockOrder/config"
-   "github.com/Jarntae/Sa_StockOrder/entity"
-   "github.com/Jarntae/Sa_StockOrder/services"
+   "github.com/PT-tatae/Project_ManageStock/config"
+	"github.com/PT-tatae/Project_ManageStock/entity"
+   "github.com/PT-tatae/Project_ManageStock/services"
 )
 
 type (

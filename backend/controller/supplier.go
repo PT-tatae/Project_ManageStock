@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/Jarntae/Sa_StockOrder/entity"
-	"github.com/Jarntae/Sa_StockOrder/config"
+	"github.com/PT-tatae/Project_ManageStock/config"
+	"github.com/PT-tatae/Project_ManageStock/entity"
 	
 )
 

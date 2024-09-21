@@ -3,7 +3,7 @@ package middlewares
 import (
    "net/http"
    "strings"
-   "github.com/Jarntae/Sa_StockOrder/services"
+   "github.com/PT-tatae/Project_ManageStock/services"
    "github.com/gin-gonic/gin"
 )
 
