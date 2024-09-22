@@ -20,7 +20,7 @@ import StockMeat from "../Pages/stock-data/StockMeat";
 import StockNoodlesAndDough from "../Pages/stock-data/StockNoodlesAndDough";
 import StockSeafood from "../Pages/stock-data/StockSeafood";
 import StockVegetable from "../Pages/stock-data/StockVegetable";
-
+import Supplier from "../Pages/Supplier/Suppliper";
 
 
 const {Content} = Layout;
@@ -71,6 +71,7 @@ const FullLayout: React.FC = () => {
               <Route path="/ManageStock/Seafood" element={<StockSeafood />} />
               <Route path="/ManageStock/NoodlesAndDough" element={<StockNoodlesAndDough />} />
               <Route path="/ManageStock/BeveragesAndDesserts" element={<StockBeveragesAndDesserts />} />
+              <Route path="/ManageStock/Supplier" element={<Supplier />} />
 
             </Routes>
           </div>

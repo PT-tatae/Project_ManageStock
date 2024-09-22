@@ -27,6 +27,7 @@ const StockMeat = Loadable(lazy(() => import("../components/Pages/stock-data/Sto
 const StockCondimentsAndSauce = Loadable(lazy(() => import("../components/Pages/stock-data/StockCondimentsAndSauce")))
 const StockNoodlesAndDough = Loadable(lazy(() => import("../components/Pages/stock-data/StockNoodlesAndDough")))
 const StockSeafood = Loadable(lazy(() => import("../components/Pages/stock-data/StockSeafood")))
+const Supplier = Loadable(lazy(() => import("../components/Pages/Supplier/Suppliper")))
 
 const AdminRoutes = (isLoggedIn : boolean): RouteObject => {
   return {
@@ -122,6 +123,10 @@ const AdminRoutes = (isLoggedIn : boolean): RouteObject => {
           {
             path: "BeveragesAndDesserts", 
             element: <StockBeveragesAndDesserts />,
+          },
+          {
+            path: "Supplier", 
+            element: <Supplier />,
           },
         ]
       },
