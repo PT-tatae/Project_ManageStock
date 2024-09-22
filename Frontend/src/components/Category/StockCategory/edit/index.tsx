@@ -16,16 +16,14 @@ import {
   PlusSquareOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { StockInterface } from "../../../interfaces/Stock.ts";
-import useSupplierName from "../../../Hook/useSupplierName.tsx";
+import { StockInterface } from "../../../../interfaces/Stock.ts";
+import useSupplierName from "../../../../Hook/useSupplierName.tsx";
 import {
   AddStock,
   //GetSupplierName,
   UpdateStock,
-} from "../../../services/https/index.tsx";
+} from "../../../../services/https/index.tsx";
 import moment from "moment";
-
-
 
 const { Header, Content } = Layout;
 const { Option } = Select;
@@ -37,7 +35,7 @@ export default function StockCategory({
 }) {
   const navigate = useNavigate();
   const [isAdding, setIsAdding] = useState(false); // แสดง/ไม่แสดง ของ form หลัก
-
+  const [isDatePickerDisabled, setIsDatePickerDisabled] = useState(false); //ลูกเล่นปิด/เปิด form Disabled
   const [form] = Form.useForm();
   //const [data] = useState(initialData); //รับข้อมูลมา
   const [query, setQuery] = useState(""); // การค้นหา
@@ -130,19 +128,43 @@ export default function StockCategory({
   const handleEditClick = (record : any) => {
     console.log("record",record);
     
+    // ฟังก์ชันการแก้ไขข้อมูล
+    /* 
+        ปัญหาอยู่ที่ DatePicker ทำให้ไม่สามารถยิงเวลาไปโชว์ที่ Form ได้กำลังเร่งหา lib ตัวใหม่ครับ
+        ทำให้เวลามีข้อมูลใน form มันจะบัคทั้งการโชว์และเลือกเวลา 00:00
+    */
+
+    const importDateMoment = moment(record.importDate, "M/D/YYYY HH:mm:ss");
+    const expiryDateMoment = moment(record.expiryDate, "M/D/YYYY HH:mm:ss");
+    console.log("แปลงวันที่",{importDateMoment,expiryDateMoment});
+    
+    
+    
     setEditingRecord({
       
       ...record,
       stock_id: record.key, // เพิ่ม stock_id (รหัสรายการ)
     });
-    
+    form.setFieldsValue({
+      code: record.code,
+      name: record.name,
+      quantity: record.quantity,
+      price: record.price,
+      importDate: importDateMoment.isValid() ? importDateMoment : null,
+      expiryDate: expiryDateMoment.isValid() ? expiryDateMoment : null,
+      supplier: record.supplier,
+    });
+    setIsDatePickerDisabled(true);
+    setFormDisabled(false);
+    setOpen(true);
+    setIsAdding(true);
   };
 
   const handleAdd = () => {
     setEditingRecord(null);
     form.resetFields();
     setOpen(false);
-
+    setIsDatePickerDisabled(false);
     setIsAdding(true);
   };
 
@@ -287,7 +309,7 @@ export default function StockCategory({
                   rules={[{ required: true, message: "กรุณากรอกรหัสสินค้า" }]}
                 >
                   <Row>
-                    <Col span={ 12 }>
+                    <Col span={isAdding && editingRecord === null ? 12 : 24}>
                       <Select
                         placeholder="เลือกรหัสสินค้า"
                         onChange={handleProductSelect}
@@ -301,6 +323,8 @@ export default function StockCategory({
                         ))}
                       </Select>
                     </Col>
+
+                    {isAdding && editingRecord === null && (
                       <Col span={12}>
                         <Button
                           onClick={openForm}
@@ -311,7 +335,7 @@ export default function StockCategory({
                           ไม่มีรหัส ? คลิกเพื่อเพิ่ม
                         </Button>
                       </Col>
-                   
+                    )}
                   </Row>
                 </Form.Item>
 
@@ -365,7 +389,8 @@ export default function StockCategory({
                   <DatePicker
                     style={{ width: "100%" }}
                     showTime={{ format: "HH:mm" }}
-                    format="M/D/YYYY HH:mm"
+                    format={isDatePickerDisabled == true ? "M/D/YYYY ":"M/D/YYYY HH:mm"}
+                    disabled={isDatePickerDisabled}
                   />
                 </Form.Item>
 
@@ -377,7 +402,8 @@ export default function StockCategory({
                   <DatePicker
                     style={{ width: "100%" }}
                     showTime={{ format: "HH:mm" }}
-                    format="M/D/YYYY HH:mm"
+                    format={isDatePickerDisabled == true ? "M/D/YYYY ":"M/D/YYYY HH:mm"}
+                    disabled={isDatePickerDisabled}
                   />
                 </Form.Item>
                 
