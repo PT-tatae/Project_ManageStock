@@ -21,7 +21,12 @@ const ChangePassword = Loadable(lazy(() => import("../components/Pages/ProfileEd
 const Payment = Loadable(lazy(() => import("../components/Pages/Payment/payment")))
 
 const ManageStock  = Loadable(lazy(() => import("../components/Pages/Managestock/Managestock")))
-const BeveragesAndDesserts = Loadable(lazy(() => import("../components/Pages/stock-data/StockBeveragesAndDesserts")))
+const StockBeveragesAndDesserts = Loadable(lazy(() => import("../components/Pages/stock-data/StockBeveragesAndDesserts")))
+const StockVegetable = Loadable(lazy(() => import("../components/Pages/stock-data/StockVegetable")))
+const StockMeat = Loadable(lazy(() => import("../components/Pages/stock-data/StockMeat")))
+const StockCondimentsAndSauce = Loadable(lazy(() => import("../components/Pages/stock-data/StockCondimentsAndSauce")))
+const StockNoodlesAndDough = Loadable(lazy(() => import("../components/Pages/stock-data/StockNoodlesAndDough")))
+const StockSeafood = Loadable(lazy(() => import("../components/Pages/stock-data/StockSeafood")))
 
 const AdminRoutes = (isLoggedIn : boolean): RouteObject => {
   return {
@@ -95,8 +100,28 @@ const AdminRoutes = (isLoggedIn : boolean): RouteObject => {
             element: <ManageStock />,
           },
           {
+            path: "Meat", 
+            element: <StockMeat />,
+          },
+          {
+            path: "Vegetable", 
+            element: <StockVegetable />,
+          },
+          {
+            path: "CondimentsAndSauce", 
+            element: <StockCondimentsAndSauce />,
+          },
+          {
+            path: "NoodlesAndDough", 
+            element: <StockNoodlesAndDough />,
+          },
+          {
+            path: "Seafood", 
+            element: <StockSeafood />,
+          },
+          {
             path: "BeveragesAndDesserts", 
-            element: <BeveragesAndDesserts />,
+            element: <StockBeveragesAndDesserts />,
           },
         ]
       },

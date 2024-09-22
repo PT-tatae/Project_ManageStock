@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import React from "react";
+import { Routes, Route} from "react-router-dom";
 import "../../App.css";
-import { Breadcrumb, Layout, Menu, theme, message } from "antd";
+import { Breadcrumb, Layout,  theme, message } from "antd";
 import Dashboard from "../Pages/dashboard";
 import Member from "../Pages/member/member";
 import MemberCreate from "../Pages/member/create";
@@ -15,6 +15,13 @@ import Payment from "../Pages/Payment/payment";
 import ChangePassword from "../Pages/ProfileEdit/changePassword";
 import ManageStock from "../Pages/Managestock/Managestock";
 import StockBeveragesAndDesserts from "../Pages/stock-data/StockBeveragesAndDesserts";
+import StockCondimentsAndSauce from "../Pages/stock-data/StockCondimentsAndSauce";
+import StockMeat from "../Pages/stock-data/StockMeat";
+import StockNoodlesAndDough from "../Pages/stock-data/StockNoodlesAndDough";
+import StockSeafood from "../Pages/stock-data/StockSeafood";
+import StockVegetable from "../Pages/stock-data/StockVegetable";
+
+
 
 const {Content} = Layout;
 
@@ -58,7 +65,13 @@ const FullLayout: React.FC = () => {
               <Route path="/changePassword" element={<ChangePassword />} />
               <Route path="/payment" element={<Payment />} />
               <Route path="/ManageStock" element={<ManageStock />} />
+              <Route path="/ManageStock/Meat" element={<StockMeat />} />
+              <Route path="/ManageStock/Vegetable" element={<StockVegetable />} />
+              <Route path="/ManageStock/CondimentsAndSauce" element={<StockCondimentsAndSauce />} />
+              <Route path="/ManageStock/Seafood" element={<StockSeafood />} />
+              <Route path="/ManageStock/NoodlesAndDough" element={<StockNoodlesAndDough />} />
               <Route path="/ManageStock/BeveragesAndDesserts" element={<StockBeveragesAndDesserts />} />
+
             </Routes>
           </div>
         </Content>
